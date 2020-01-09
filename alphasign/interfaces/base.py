@@ -15,6 +15,9 @@ class BaseInterface(object):
 
   def write(self, data):
     return False
+  
+  def read(self, size):
+    return False
 
   def clear_memory(self):
     """Clear the sign's memory.
@@ -74,16 +77,22 @@ class BaseInterface(object):
     """
     seq = ""
     for obj in files:
-      size_hex = "%04X" % obj.size
       # format: FTPSIZEQQQQ
 
       if type(obj) == alphasign.string.String:
         file_type = "B"
         qqqq = "0000"  # unused for strings
+        size_hex = "%04X" % obj.size
+        lock = constants.LOCKED
+      elif type(obj) == alphasign.smalldots.SmallDotsPicture:
+        file_type = "D"
+        qqqq = obj.typ
+        size_hex = "%02X%02X" % (obj.height, obj.width)
         lock = constants.LOCKED
       else:  # if type(obj) == alphasign.text.Text:
         file_type = "A"
         qqqq = "FFFF"  # TODO(ms): start/end times
+        size_hex = "%04X" % obj.size
         lock = constants.UNLOCKED
 
       alloc_str = ("%s%s%s%s%s" %

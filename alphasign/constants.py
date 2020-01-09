@@ -40,3 +40,8 @@ ESC                   = "\x1B"  # Escape character
 
 NEWLINE               = NL
 NEWPAGE               = NP
+
+# Constants for SMALL DOTS PICTURE color palette
+TYPE_MONOCHROME       = "1000"
+TYPE_3COLOR           = "2000"
+TYPE_8COLOR           = "4000"

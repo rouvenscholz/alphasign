@@ -1,5 +1,5 @@
-import constants
-from packet import Packet
+import alphasign.constants
+from alphasign.packet import Packet
 
 
 class Time(object):

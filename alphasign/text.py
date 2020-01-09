@@ -1,7 +1,7 @@
-import constants
-import modes
-import positions
-from packet import Packet
+from alphasign import constants
+from alphasign import modes
+from alphasign import positions
+from alphasign.packet import Packet
 
 
 class Text(object):
@@ -46,7 +46,7 @@ class Text(object):
     self.mode = mode
     self.priority = priority
 
-  def __str__(self):
+  def to_packet(self):
     # [WRITE_TEXT][File Label][ESC][Display Position][Mode Code]
     #   [Special Specifier][ASCII Message]
 
@@ -60,7 +60,10 @@ class Text(object):
     else:
       packet = Packet("%s%s" % (constants.WRITE_TEXT,
                                 (self.priority and "0" or self.label)))
-    return str(packet)
+    return packet
+
+  def __bytes__(self):
+    return bytes(self.to_packet())
 
   def __repr__(self):
-    return repr(self.__str__())
+    return repr(self.__bytes__())

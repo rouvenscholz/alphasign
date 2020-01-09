@@ -21,6 +21,7 @@ The full API is documented with examples in the pages below:
   modes
   packet
   positions
+  smalldots
   speeds
   string
   text

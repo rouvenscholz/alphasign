@@ -39,6 +39,7 @@ Make a bi-color text file (red primary with a green shadow)::
 """
 
 # Colors
+NONE      = "\x1C0"
 RED       = "\x1C1"
 GREEN     = "\x1C2"
 AMBER     = "\x1C3"

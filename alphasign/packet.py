@@ -1,5 +1,19 @@
-import constants
+from alphasign import constants
 
+class PacketPart(object):
+  """Small helper class to split a packet into several chunks with delays inbetween.
+
+  This class allows to delay sending more data mid-packet
+  if the protocol has timing requirements.
+  :ivar contents: Package data.
+  :ivar delay: sleep (milliseconds) after sending this part
+  """
+  def __init__(self, contents, delay=0):
+    self.contents = contents
+    self.delay = delay
+  
+  def __bytes__(self):
+    return self.contents.encode()
 
 class Packet(object):
   """Container for data to be sent to a sign device.
@@ -8,16 +22,34 @@ class Packet(object):
   instantiated directly.
   """
 
-  def __init__(self, contents):
+  def __init__(self, contents=None):
     self.type     = "Z"   # Type Code (see protocol)
     self.address  = "00"  # Sign Address (see protocol)
-    self._pkt = ("%s%s%s%s%s%s%s" %
-                 (constants.NUL * 5, constants.SOH, self.type,
-                  self.address, constants.STX, contents,
-                  constants.EOT))
+    self._pkt = []
+    if contents is not None:
+      self._pkt.append(PacketPart(contents))
 
-  def __str__(self):
-    return self._pkt
+  def add_part(self, contents, delay=0):
+    self._pkt.append(PacketPart(contents, delay))
+  
+  def get_parts(self):
+    parts = []
+    # Add base protocol packet header
+    parts.append(PacketPart("%s%s%s%s%s" %
+              (constants.NUL * 5, constants.SOH, self.type,
+                self.address, constants.STX)))
+    # Add all payload parts
+    for part in self._pkt:
+      parts.append(part)
+    # Add base protocol end indicator without checksums.
+    parts.append(PacketPart(constants.EOT))
+    return parts
+
+  def __bytes__(self):
+    data = b''
+    for part in self.get_parts():
+      data += bytes(part)
+    return data
 
   def __repr__(self):
-    return repr(self._pkt)
+    return repr(self.__bytes__())

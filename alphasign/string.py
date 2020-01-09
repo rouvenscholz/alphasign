@@ -1,5 +1,5 @@
-import constants
-from packet import Packet
+from alphasign import constants
+from alphasign.packet import Packet
 
 
 class String(object):
@@ -41,9 +41,12 @@ class String(object):
     """
     return "\x10%s" % self.label
 
-  def __str__(self):
-    return str(Packet("%s%s%s" % (constants.WRITE_STRING, self.label,
-                                  self.data)))
+  def to_packet(self):
+    return Packet("%s%s%s" % (constants.WRITE_STRING, self.label,
+                              self.data))
+
+  def __bytes__(self):
+    return bytes(self.to_packet())
 
   def __repr__(self):
-    return repr(self.__str__())
+    return repr(self.__bytes__())

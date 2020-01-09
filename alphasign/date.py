@@ -1,6 +1,6 @@
-import constants
+import alphasign.constants
 import datetime
-from packet import Packet
+from alphasign.packet import Packet
 
 
 class Date(object):
