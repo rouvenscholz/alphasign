@@ -24,7 +24,8 @@ class BaseInterface(object):
 
     :rtype: None
     """
-    pkt = packet.Packet("%s%s" % (constants.WRITE_SPECIAL, "$"))
+#    pkt = packet.Packet("%s%s" % (constants.WRITE_SPECIAL, "$"))
+    pkt = packet.Packet(b"".join([constants.WRITE_SPECIAL,b"$"]))
     self.write(pkt)
     time.sleep(1)
 
@@ -53,7 +54,7 @@ class BaseInterface(object):
     elif repeat > 15:
       repeat = 15
 
-    pkt = packet.Packet("%s%s%02X%X%X" % (constants.WRITE_SPECIAL, "(2",
+    pkt = packet.Packet(b"%s%s%02X%X%X" % (constants.WRITE_SPECIAL, "(2",
                                           frequency, duration, repeat))
     self.write(pkt)
 
@@ -64,7 +65,7 @@ class BaseInterface(object):
 
     :rtype: None
     """
-    pkt = packet.Packet("%s%s" % (constants.WRITE_SPECIAL, ","))
+    pkt = packet.Packet("%s%s" % (constants.WRITE_SPECIAL, ",").encode())
     self.write(pkt)
 
   def allocate(self, files):
@@ -75,45 +76,61 @@ class BaseInterface(object):
 
     :rtype: None
     """
-    seq = ""
+    seq = b""
     for obj in files:
       # format: FTPSIZEQQQQ
 
       if type(obj) == alphasign.string.String:
-        file_type = "B"
-        qqqq = "0000"  # unused for strings
-        size_hex = "%04X" % obj.size
+        file_type = b"B"
+        qqqq = b"0000"  # unused for strings
+        size_hex = b"%04X" % obj.size
         lock = constants.LOCKED
       elif type(obj) == alphasign.smalldots.SmallDotsPicture:
-        file_type = "D"
+        file_type = b"D"
         qqqq = obj.typ
-        size_hex = "%02X%02X" % (obj.height, obj.width)
+        size_hex = b"%02X%02X" % (obj.height, obj.width)
         lock = constants.LOCKED
       else:  # if type(obj) == alphasign.text.Text:
-        file_type = "A"
-        qqqq = "FFFF"  # TODO(ms): start/end times
-        size_hex = "%04X" % obj.size
+        file_type = b"A"
+        qqqq = b"FFFF"  # TODO(ms): start/end times
+        size_hex = b"%04X" % obj.size
         lock = constants.UNLOCKED
 
-      alloc_str = ("%s%s%s%s%s" %
-                   (obj.label,  # file label to allocate
-                   file_type,   # file type
-                   lock,
-                   size_hex,    # size in hex
-                   qqqq))
-      seq += alloc_str
+#      alloc_str = ("%s%s%s%s%s" %
+#                   (obj.label,  # file label to allocate
+#                   file_type,   # file type
+#                   lock,
+#                   size_hex,    # size in hex
+#                   qqqq))
+      seq = b"".join([
+        seq, obj.label, file_type, lock, size_hex, qqqq
+      ])
 
     # allocate special TARGET TEXT files 1 through 5
     for i in range(5):
-      alloc_str = ("%s%s%s%s%s" %
-                   ("%d" % (i + 1),
-                   "A",    # file type
-                   constants.UNLOCKED,
-                   "%04X" % 100,
-                   "FEFE"))
-      seq += alloc_str
+#      alloc_str = ("%s%s%s%s%s" %
+#                   ("%d" % (i + 1),
+#                   "A",    # file type
+#                   constants.UNLOCKED,
+#                   "%04X" % 100,
+#                   "FEFE"))
+#      seq += alloc_str
+      seq = b"".join([
+        seq, 
+        b"%d" % (i + 1), 
+        b"A",  #file type
+        constants.UNLOCKED, 
+        b"%04X" % 100, 
+        b"FEFE"
+      ])
+#    seq = seq.encode()
 
-    pkt = packet.Packet("%s%s%s" % (constants.WRITE_SPECIAL, "$", seq))
+#    pkt = packet.Packet("%s%s%s" % (constants.WRITE_SPECIAL, "$", seq))
+    pkt = packet.Packet(b"".join([
+        constants.WRITE_SPECIAL,
+        b"$",
+        seq
+    ]))
     self.write(pkt)
 
   def set_run_sequence(self, files, locked=False):
@@ -128,9 +145,15 @@ class BaseInterface(object):
 
     :rtype: None
     """
-    seq_str = ".T"
-    seq_str += locked and "L" or "U"
+#    seq_str = ".T"
+#    seq_str += locked and "L" or "U"
+    seq_str = b"".join([
+      b"T", 
+      locked and b"L" or b"U"
+    ])
     for obj in files:
-      seq_str += obj.label
-    pkt = packet.Packet("%s%s" % (constants.WRITE_SPECIAL, seq_str))
+#      seq_str += obj.label
+      seq_str = b"".join([seq_str, obj.label])
+    #pkt = packet.Packet("%s%s" % (constants.WRITE_SPECIAL, seq_str))
+    pkt = packet.Packet(b"".join([constants.WRITE_SPECIAL, seq_str]))
     self.write(pkt)

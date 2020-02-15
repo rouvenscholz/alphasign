@@ -22,14 +22,18 @@ class Text(object):
                      all other TEXT files. Set to True with an empty message to
                      clear a priority TEXT.
     """
-    if data is None:
-      data = ""
-    if label is None:
-      label = "A"
+    if data:
+      self.data = data.encode(encoding="ascii", errors="alphasign")
+    else:
+      self.data = b""
+    if label:
+       self.label = label.encode(encoding="ascii", errors="strict")
+    else:
+      self.label = b"A"
     if size is None:
       size = 64
-    if len(data) > size:
-      size = len(data)
+    if len(self.data) > size:
+      size = len(self.data)
     if size < 1:
       size = 1
     if position is None:
@@ -37,9 +41,7 @@ class Text(object):
     if mode is None:
       mode = modes.ROTATE
 
-    self.label = label
     self.size = size
-    self.data = data
     self.position = position
     self.mode = mode
     self.priority = priority
@@ -47,21 +49,23 @@ class Text(object):
   def to_packet(self):
     # [WRITE_TEXT][File Label][ESC][Display Position][Mode Code]
     #   [Special Specifier][ASCII Message]
-
     if self.data:
-      packet = Packet("%s%s%s%s%s%s" % (constants.WRITE_TEXT,
-                                        (self.priority and "0" or self.label),
-                                        constants.ESC,
-                                        self.position,
-                                        self.mode,
-                                        self.data))
+      packet = b"".join([
+        constants.WRITE_TEXT,
+        self.priority and b"0" or self.label,
+        constants.ESC,
+        self.position,
+        self.mode,
+        self.data
+      ])
     else:
-      packet = Packet("%s%s" % (constants.WRITE_TEXT,
-                                (self.priority and "0" or self.label)))
+#      packet = Packet("%s%s" % (constants.WRITE_TEXT,
+#                                (self.priority and "0" or self.label)))
+      packet = Packet(b"".join([constants.WRITE_TEXT, self.priority and b"0" or self.label]))
     return packet
 
   def __bytes__(self):
-    return bytes(self.to_packet())
+    return self.to_packet()
 
   def __repr__(self):
     return repr(self.__bytes__())

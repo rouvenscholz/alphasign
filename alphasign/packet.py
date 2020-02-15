@@ -13,7 +13,8 @@ class PacketPart(object):
     self.delay = delay
   
   def __bytes__(self):
-    return self.contents.encode()
+    #return self.contents.encode()
+    return self.contents
 
 class Packet(object):
   """Container for data to be sent to a sign device.
@@ -23,8 +24,8 @@ class Packet(object):
   """
 
   def __init__(self, contents=None):
-    self.type     = "Z"   # Type Code (see protocol)
-    self.address  = "00"  # Sign Address (see protocol)
+    self.type     = b"Z"   # Type Code (see protocol)
+    self.address  = b"00"  # Sign Address (see protocol)
     self._pkt = []
     if contents is not None:
       self._pkt.append(PacketPart(contents))
@@ -35,9 +36,13 @@ class Packet(object):
   def get_parts(self):
     parts = []
     # Add base protocol packet header
-    parts.append(PacketPart("%s%s%s%s%s" %
-              (constants.NUL * 5, constants.SOH, self.type,
-                self.address, constants.STX)))
+#    parts.append(PacketPart("%s%s%s%s%s" %
+#              (constants.NUL * 5, constants.SOH, self.type,
+#                self.address, constants.STX)))
+    parts.append(PacketPart(b"".join([
+        constants.NUL * 5, constants.SOH, self.type,
+        self.address, constants.STX
+    ])))
     # Add all payload parts
     for part in self._pkt:
       parts.append(part)
@@ -46,7 +51,7 @@ class Packet(object):
     return parts
 
   def __bytes__(self):
-    data = b''
+    data = b""
     for part in self.get_parts():
       data += bytes(part)
     return data

@@ -15,21 +15,24 @@ class String(object):
     :param label: file label (default: "1")
     :param size: maximum size of string data in bytes (default: 32)
     """
-    if data is None:
-      data = ""
-    if label is None:
-      label = "1"
+    if data:
+      self.data = data.encode(encoding="ascii", errors="alphasign")
+    else:
+      self.data = b""
+    if label:
+      self.label = label.encode(encoding="ascii", errors="strict")
+    else:
+      self.label = b"1"
     if size is None:
       size = 32
-    if len(data) > size:
-      size = len(data)
+    if len(self.data) > size:
+      size = len(self.data)
     if size > 125:
       size = 125
     if size < 1:
       size = 1
     self.label = label
     self.size = size
-    self.data = data
 
   def call(self):
     """Call a STRING.
@@ -39,10 +42,10 @@ class String(object):
     :returns: control code and specified string label
     :rtype: string
     """
-    return "\x10%s" % self.label
+    return b"\x10%s" % self.label
 
   def to_packet(self):
-    return Packet("%s%s%s" % (constants.WRITE_STRING, self.label,
+    return Packet(b"%s%s%s" % (constants.WRITE_STRING, self.label,
                               self.data))
 
   def __bytes__(self):
