@@ -22,10 +22,14 @@ class Text(object):
                      all other TEXT files. Set to True with an empty message to
                      clear a priority TEXT.
     """
-    if data is None:
-      data = ""
-    if label is None:
-      label = "A"
+    if data:
+      data = data.encode(encoding="ascii", errors="alphasign")
+    else:
+      data = b""
+    if label:
+      label = label.encode(encoding="ascii", errors="strict")
+    else:
+      label = b"A"
     if size is None:
       size = 64
     if len(data) > size:
@@ -49,15 +53,15 @@ class Text(object):
     #   [Special Specifier][ASCII Message]
 
     if self.data:
-      packet = Packet("%s%s%s%s%s%s" % (constants.WRITE_TEXT,
-                                        (self.priority and "0" or self.label),
+      packet = Packet(b"%s%s%s%s%s%s" % (constants.WRITE_TEXT,
+                                        (self.priority and b"0" or self.label),
                                         constants.ESC,
                                         self.position,
                                         self.mode,
                                         self.data))
     else:
-      packet = Packet("%s%s" % (constants.WRITE_TEXT,
-                                (self.priority and "0" or self.label)))
+      packet = Packet(b"%s%s" % (constants.WRITE_TEXT,
+                                (self.priority and b"0" or self.label)))
     return packet
 
   def __bytes__(self):

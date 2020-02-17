@@ -20,7 +20,7 @@ class SmallDotsPicture(object):
     if typ is None:
       typ = constants.TYPE_8COLOR
     if label is None:
-      label = "a"
+      label = b"a"
     if height > 31:
         height = 31
     if height < 0:
@@ -65,14 +65,14 @@ class SmallDotsPicture(object):
     :returns: control code and specified string label
     :rtype: string
     """
-    return "\x14%s" % self.label
+    return b"\x14%s" % self.label
 
   def to_packet(self):
-    image_data = ''
+    image_data = b''
     for line in self.data:
-        image_data += ''.join(str(col) for col in line) + '\r'
+        image_data += b''.join(str(col) for col in line) + b'\r'
     pkt = Packet()
-    header = "%s%s%02X%02X" % (constants.WRITE_SMALL_DOTS, self.label,
+    header = b"%s%s%02X%02X" % (constants.WRITE_SMALL_DOTS, self.label,
                                   self.height, self.width)
     pkt.add_part(header, delay=150) # min. 100ms delay after sending the width
     pkt.add_part(image_data)
