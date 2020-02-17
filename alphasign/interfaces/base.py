@@ -54,7 +54,7 @@ class BaseInterface(object):
     elif repeat > 15:
       repeat = 15
 
-    pkt = packet.Packet(b"%s%s%02X%X%X" % (constants.WRITE_SPECIAL, "(2",
+    pkt = packet.Packet(b"%s%s%02X%X%X" % (constants.WRITE_SPECIAL, b"(2",
                                           frequency, duration, repeat))
     self.write(pkt)
 
