@@ -19,13 +19,13 @@ class Serial(base.BaseInterface):
     self.debug = True
     self._conn = None
 
-  def connect(self):
+  def connect(self, baudrate=4800):
     """Establish connection to the device.
     """
     # TODO(ms): these settings can probably be tweaked and still support most of
     # the devices.
     self._conn = serial.Serial(port=self.device,
-                               baudrate=4800,
+                               baudrate=baudrate,
                                parity=serial.PARITY_EVEN,
                                stopbits=serial.STOPBITS_TWO,
                                bytesize=serial.SEVENBITS,
