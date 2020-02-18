@@ -55,6 +55,7 @@ from alphasign.string import String
 from alphasign.packet import Packet
 from alphasign.text import Text
 from alphasign.smalldots import SmallDotsPicture
+from alphasign.stringencoder import StringEncoder
 
 import alphasign.charsets
 import alphasign.colors
@@ -65,4 +66,4 @@ import alphasign.modes
 import alphasign.positions
 import alphasign.speeds
 
-
+StringEncoder.init() # register and init StringEncoder

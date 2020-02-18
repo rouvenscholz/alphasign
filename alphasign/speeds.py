@@ -20,8 +20,8 @@ Make a text file with fast text::
 """
 
 # Display speeds
-SPEED_1 = "\x15"
-SPEED_2 = "\x16"
-SPEED_3 = "\x17"
-SPEED_4 = "\x18"
-SPEED_5 = "\x19"
+SPEED_1 = b"\x15"
+SPEED_2 = b"\x16"
+SPEED_3 = b"\x17"
+SPEED_4 = b"\x18"
+SPEED_5 = b"\x19"

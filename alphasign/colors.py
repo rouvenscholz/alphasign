@@ -39,19 +39,19 @@ Make a bi-color text file (red primary with a green shadow)::
 """
 
 # Colors
-NONE      = "\x1C0"
-RED       = "\x1C1"
-GREEN     = "\x1C2"
-AMBER     = "\x1C3"
-DIM_RED   = "\x1C4"
-DIM_GREEN = "\x1C5"
-BROWN     = "\x1C6"
-ORANGE    = "\x1C7"
-YELLOW    = "\x1C8"
-RAINBOW_1 = "\x1C9"
-RAINBOW_2 = "\x1CA"
-COLOR_MIX = "\x1CB"
-AUTOCOLOR = "\x1CC"
+NONE      = b"\x1C0"
+RED       = b"\x1C1"
+GREEN     = b"\x1C2"
+AMBER     = b"\x1C3"
+DIM_RED   = b"\x1C4"
+DIM_GREEN = b"\x1C5"
+BROWN     = b"\x1C6"
+ORANGE    = b"\x1C7"
+YELLOW    = b"\x1C8"
+RAINBOW_1 = b"\x1C9"
+RAINBOW_2 = b"\x1CA"
+COLOR_MIX = b"\x1CB"
+AUTOCOLOR = b"\x1CC"
 
 
 def rgb(rgb):
@@ -60,9 +60,9 @@ def rgb(rgb):
 
   :param rgb: 6-character hex string in form RRGGBB.
   """
-  if len(rgb) and rgb[0] == "#":
+  if len(rgb) and rgb[0] == b"#":
     rgb = rgb[1:]
-  return "\x1CZ%s" % rgb
+  return b"\x1CZ%s" % rgb
 
 
 def shadow_rgb(rgb):
@@ -71,6 +71,6 @@ def shadow_rgb(rgb):
 
   :param rgb: 6-character hex string in form RRGGBB.
   """
-  if len(rgb) and rgb[0] == "#":
+  if len(rgb) and rgb[0] == b"#":
     rgb = rgb[1:]
-  return "\x1CY%s" % rgb
+  return b"\x1CY%s" % rgb

@@ -11,7 +11,7 @@ class Time(object):
     :returns: formatted string to use in a TEXT
     :rtype: string
     """
-    return "\x13"
+    return b"\x13"
 
   def set(self, hour=None, minute=None):
     """Sets the hour and minute of the internal clock on the sign.
@@ -29,7 +29,7 @@ class Time(object):
     if minute is None:
       minute = now.minute
 
-    packet = Packet("%s%s%02d%02d" % (constants.WRITE_SPECIAL, "\x20",
+    packet = Packet(b"%s%s%02d%02d" % (constants.WRITE_SPECIAL, b"\x20",
                                       hour, minute))
     return packet
 
@@ -43,6 +43,6 @@ class Time(object):
     """
     if format < 0 or format > 1:
       format = 1
-    byte = (format == 0) and "S" or "M"
-    packet = Packet("%s%s%s" % (constants.WRITE_SPECIAL, "\x27", byte))
+    byte = (format == 0) and b"S" or b"M"
+    packet = Packet(b"%s%s%s" % (constants.WRITE_SPECIAL, b"\x27", byte))
     return packet

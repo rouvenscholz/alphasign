@@ -26,7 +26,7 @@ class Date(object):
     """
     if format < 0 or format > 9:
       format = 0
-    return "\x0B%s" % format
+    return b"\x0B%s" % format
 
   def set(self, year=None, month=None, day=None):
     """Sets the date in the memory of the sign. This must be done each day to
@@ -49,7 +49,7 @@ class Date(object):
     if day is None:
       day = today.day
 
-    packet = Packet("%s%s%02d%02d%02d" % (constants.WRITE_SPECIAL, ";",
+    packet = Packet(b"%s%s%02d%02d%02d" % (constants.WRITE_SPECIAL, b";",
                                           month, day, int(year)))
     return packet
 
@@ -64,5 +64,5 @@ class Date(object):
     """
     if day is None or day < 1 or day > 7:
       day = datetime.datetime.today().weekday() + 1
-    packet = Packet("%s%s%s" % (constants.WRITE_SPECIAL, "&", day))
+    packet = Packet(b"%s%s%s" % (constants.WRITE_SPECIAL, b"&", day))
     return packet
