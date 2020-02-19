@@ -88,7 +88,7 @@ class StringEncoder:
       try:
         result = b"".join([result, StringEncoder.__lookup[err.object[i]]])
       except KeyError:
-        print("unsupported character used: '{}'".format(err.object[i]), file=stderr)
+        print("unsupported character used: '{}'".format(err.object[i]), file=stderr, flush=True)
         result = b"".join([result, b"?"])
     return (result, err.end)
 
