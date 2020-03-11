@@ -70,7 +70,7 @@ class SmallDotsPicture(object):
   def to_packet(self):
     image_data = b''
     for line in self.data:
-        image_data += b''.join(str(col).encode() for col in line) + b'\r'
+        image_data += bytes(i+ord('0') for i in line) + b"\r"
     pkt = Packet()
     header = b"%s%s%02X%02X" % (constants.WRITE_SMALL_DOTS, self.label,
                                   self.height, self.width)
