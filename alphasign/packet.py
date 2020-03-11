@@ -1,4 +1,6 @@
 from alphasign import constants
+from logging import getLogger
+logger = getLogger(__name__)
 
 class PacketPart(object):
   """Small helper class to split a packet into several chunks with delays inbetween.

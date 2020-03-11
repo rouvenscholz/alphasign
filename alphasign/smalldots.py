@@ -1,5 +1,7 @@
 from alphasign import constants
 from alphasign.packet import Packet
+from logging import getLogger
+logger = getLogger(__name__)
 
 class SmallDotsPicture(object):
   """Class representing a SMALL DOTS PICTURE file.

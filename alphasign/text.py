@@ -2,6 +2,8 @@ from alphasign import constants
 from alphasign import modes
 from alphasign import positions
 from alphasign.packet import Packet
+from logging import getLogger
+logger = getLogger(__name__)
 
 
 class Text(object):

@@ -1,5 +1,6 @@
 from codecs import register_error
-from sys import stderr
+from logging import getLogger
+logger = getLogger(__name__)
 
 class StringEncoder:
   __lookup = None
@@ -88,18 +89,6 @@ class StringEncoder:
       try:
         result = b"".join([result, StringEncoder.__lookup[err.object[i]]])
       except KeyError:
-        print("unsupported character used: '{}'".format(err.object[i]), file=stderr, flush=True)
+        logger.warning("unsupported character used: '{}'".format(err.object[i]))
         result = b"".join([result, b"?"])
     return (result, err.end)
-
-
-
-def main():
-  from sys import argv
-  StringEncoder.init()
-  s = argv[1] if len(argv) >= 2 else argv[0]
-  s = s.encode(encoding='ascii', errors="alphasign")
-  print(s)
-
-if __name__ == '__main__':
-  main()
