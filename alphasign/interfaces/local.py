@@ -19,7 +19,6 @@ class Serial(base.BaseInterface):
     :type device: string
     """
     self.device = device
-    self.debug = True
     self._conn = None
 
   def connect(self, baudrate=4800):
@@ -77,7 +76,6 @@ class USB(base.BaseInterface):
     :param usb_id: tuple of (vendor id, product id) identifying the USB device
     """
     self.vendor_id, self.product_id = usb_id
-    self.debug = False
     self._handle = None
     self._conn = None
 
@@ -130,17 +128,15 @@ class DebugInterface(base.BaseInterface):
   This does nothing except print the contents of written packets.
   """
   def __init__(self):
-    self.debug = True
+    logger.debug("{}.{}".format(self.__class__.__name__, "__init__()"))
 
   def connect(self):
-    """ """
-    pass
+    logger.debug("{}.{}".format(self.__class__.__name__, "connect()"))
 
   def disconnect(self):
-    """ """
-    pass
+    logger.debug("{}.{}".format(self.__class__.__name__, "disconnect()"))
 
   def write(self, packet):
-    """ """
+    logger.debug("{}.{}".format(self.__class__.__name__, "write()"))
     logger.debug("Writing packet: %s" % repr(packet))
     return True
