@@ -77,7 +77,7 @@ class StringEncoder:
         "Í": calccode(191),
         "Õ": calccode(192),
         "õ": calccode(193),
-        "€": calccode(194)
+#        "€": calccode(194) # not supported on 215C?
       }
       register_error("alphasign", StringEncoder.__asciierrorhandler)
 
